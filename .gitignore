@@ -1,0 +1,8 @@
+__pycache__/
+*.pycache__
+*env/
+DS_Store/
+.idea/
+.vscode/
+*.db
+*.tmp
