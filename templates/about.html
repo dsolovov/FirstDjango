@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    About
+{% endblock  %}
+
+{% block content %}
+    {{ block.super }}
+
+    Имя: <b>{{ author.first_name }}</b><br>
+    Отчество: <b>{{ author.middle_name }}</b><br>
+    Фамилия: <b>{{ author.last_name }}</b><br>
+    телефон: <b>{{ author.phone }}</b><br>
+    email: <b> {{ author.email  }}</b><br>
+
+{% endblock %}

@@ -1,25 +1,36 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title> Item page</title>
-</head>
-<body>
-    <header>
-        / <a href="/"> Home </a> / <a href="/items"> Items </a> / <a href="/about"> About </a>
-    </header>
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Item page
+{% endblock  %}
+
+{% block style %}
+    {{ block.super }}
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+{% endblock  %}
+
+{% block content %}
+    {{ block.super }}
 
     <h1> {{ item.name }}</h1>
 
     <div>
-        {% if item.quantity == 0 %}
-            Товар отсутствует
-        {% else %}
-            Количество: {{ item.quantity }}
-        {% endif %}
+        Количество: {{ item.count | default:"Товар отсутствует на складе" }}
     </div>
-    <br><br>
-    <a href="/items"> Назад к списку товаров </a>
+    <div>
+        Описание: {{ item.description }}
+    </div>
+    <i>Цвета</i>
+    <ul class='ul_no_mark'>
+        {% for color in colors %}
+            <li><div class='div_color' style='background-color: {{ color.name }};'></div>&nbsp;&nbsp;{{ color.name }}</li>
+        {% endfor %}
+    </ul>
 
-</body>
-</html>
+    <br><br>
+    <a href="{% url "items-list" %}"> Назад к списку товаров </a>
+
+{% endblock %}

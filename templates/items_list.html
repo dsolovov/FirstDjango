@@ -1,21 +1,33 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Items list</title>
-</head>
-<body>
-    <header>
-        / <a href="/"> Home </a> / <a href="/items"> Items </a> / <a href="/about"> About </a>
-    </header>
-    
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Items list
+{% endblock  %}
+
+{% block style %}
+    {{ block.super }}
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+{% endblock  %}
+
+{% block content %}
+    {{ block.super }}
+
     <h2> Список товаров</h2>
     
-    <ol>
+    <div class="items">
         {% for item in items %}
-            <li><a href="/item/{{ item.id }}"> {{ item.name }} </a></li>
+        <div class="item">
+            <a href="{% url "item-detail" item.id %}">
+                <p class = "item_name">{{ item.name }}</p>
+                <p> Бренд: {{ item.brand }}</p>
+                <p> Описание товара:</p> 
+                <p> {{ item.description }} </p>
+             </a>
+        </div>
         {% endfor %}
-    </ol>
+    </div>
 
-</body>
-</html>
+{% endblock  %}

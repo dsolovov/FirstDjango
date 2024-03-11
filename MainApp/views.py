@@ -1,16 +1,17 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 from MainApp.models import Item
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # Create your views here.
-author = {
-    "Имя": "Иван",
-    "Отчество": "Петрович",
-    "Фамилия": "Иванов",
-    "телефон": "8-923-600-01-02",
-    "email": "vasya@mail.ru",
-}
+#author = {
+    #"Имя": "Иван",
+    #"Отчество": "Петрович",
+    #"Фамилия": "Иванов",
+    #"телефон": "8-923-600-01-02",
+    #"email": "vasya@mail.ru",
+#}
 
 #items = [
     #{"id": 1, "name": "Кроссовки abibas", "quantity": 5},
@@ -22,10 +23,6 @@ author = {
 
 
 def home(request):
-    # text = """<h1>"Изучаем django"</h1>
-    #     <strong>Автор</strong>: <i>Иванов И.П.</i>
-    #     """
-    # return HttpResponse(text)
     context = {
         "name": "Петров Иван Николаевич",
         "email": "my_mail@mail.ru",
@@ -34,28 +31,33 @@ def home(request):
 
 
 def about(request):
-    text = f"""
-    <header>
-        / <a href="/"> Home </a> / <a href="/items"> Items </a> / <a href="/about"> About </a>
-    </header>
-    Имя: <b>{author["Имя"]}</b><br>
-    Отчество: <b>{author["Отчество"]}</b><br>
-    Фамилия: <b>{author["Фамилия"]}</b><br>
-    телефон: <b>{author["телефон"]}</b><br>
-    email: <b>{author["email"]}</b><br>
-    """
-    return HttpResponse(text)
+    author = {
+        "first_name": "Иван",
+        "middle_name": "Петрович",
+        "last_name": "Иванов",
+        "phone": "8-923-600-01-02",
+        "email": "vasya@mail.ru",
+    }
+    context = {
+        "author": author
+    }
+    return render(request, "about.html", context)
 
 
 def get_item(request, item_id: int):
-    """ По указанному item_id возращаем имя элемента и количество. """
+    """По указанному id возвращаем имя элемента и кол-во"""
     try:
-        item = Item.objects.get(id=item_id)   
+        item = Item.objects.get(id=item_id)
+        colors = []
+        # Проверяем, что у элемента есть хоть один цвет
+        if item.colors.exists():
+            colors = item.colors.all()
     except ObjectDoesNotExist:
-        return HttpResponseNotFound(f'Item with id={item_id} not found')
+        return HttpResponseNotFound(f"Item with id={item_id} not found.")
     else:
         context = {
             "item": item,
+            "colors": colors,
         }
         return render(request, "item_page.html", context)
 
@@ -63,6 +65,6 @@ def get_item(request, item_id: int):
 def get_items(request):
     items = Item.objects.all()
     context = {
-        "items": items
+        "items": items,
     }
     return render(request, "items_list.html", context)
